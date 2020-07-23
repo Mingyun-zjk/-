@@ -1,0 +1,155 @@
+在定位元素中居中：
+	left: 0 ;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+
+盒子隐藏
+	1.display:none  不生成盒子
+	2.visibility:hidden  生成盒子，只是从视觉上移除盒子，盒子任然占据空间
+
+background-attachment:fixed;  背景图相对于视口。有点类似于固定定位
+
+正则表达式
+	 var str1 = '今天 17 号天气不错,最高气温-20℃，最低气温-7℃。'
+    	// (?=xx) 后面紧跟着 xx 
+   	// console.log(str1.match(/-?[0-9]{1,2}(?=℃)/g))
+
+	重复的字符     /(.*)\1{2,}/
+	()\1     ---> 跟括号里一摸一样的
+
+和字体相关的属性都可以被继承，如果没有继承，则使用默认样式。
+
+如果父元素里面只有一张图片，那么会出现白边，解决方法是让图片display:block;
+固定定位的元素不会占据文档流，绝对定位会占据文档流。
+
+如何将一个伪数组变成一个真数组   Array.from(伪数组) ， 这个表达式会返回一个真数组。
+
+// 数组的拷贝
+    var showArr = goodsArr.slice(0)
+    createGoodsList(showArr, tbody)
+
+去掉表格的边框，成为excel表格
+
+    table {
+      border-collapse: collapse;
+    }
+
+不让选择：
+user-select: none;
+
+jQuery中不点button 就可以执行click事件 ： $(".nextBtn").trigger("click")
+
+判断传递参数的个数： 函数内默认存在一个关键字  arguments  代表存储实参的类数组
+
+原生js中获取样式值  getComputedStyle()		
+
+闭包 ： 当内部函数被保存到外部时，将会生成闭包。闭包会导致原有作用域链不释放，造成内存泄漏。
+
+立即执行函数 ： 此类函数没有声明，在一次执行过后即释放。适合初始化工作。 (function () {}())
+
+** 只有表达式才能被执行  **
+
+不允许在if里面定义函数
+
+逗号运算符，返回最后面的表达式  
+	var ggg = (12 + 2, 4);
+    console.log(ggg);  
+结果返回4
+
+例题： var x = 1;
+        if(function f() {}){     
+            x += typeof f;
+        }
+        console.log(x);
+	答案： 1undefined   // (function f () {]}) 括号里面的内容会当成是表达式，把括号里面的内容变为表达式就不是函数定义了，f从此之后就消失了。任何一个变量未经声明就使用会报错，但是唯一一个不会报错的就是typeof，返回undefined，返回的undefined是一个字符类型的， 1 + “undefined”。 所以最后的结果是1undefined。 单纯的1 + undefined，返回的结果是NAN.
+
+对象的删除用 delete  mrDeng.sex;  一个变量未经声明就是用会报错，一个对象的属性没有的话，如果你去访问，mrDeng.abc, 会返回undefined,不会报错。
+
+构造函数内部原理
+1.在函数体最前面隐式的加上this = {}
+2.执行this.xxx = xxx;
+3.隐式的返回this
+
+例：    function Student (name,sex,age){
+            this.name = name;
+            this.sex = sex;
+            this.age = age;
+            return 123;
+        }
+        var student1 = new Student("李明","male",22);
+        console.log(student1);
+	输出的内容是： Student {name: "李明", sex: "male", age: 22}
+
+		function Student (name,sex,age){
+            this.name = name;
+            this.sex = sex;
+            this.age = age;
+            return {};
+        }
+        var student1 = new Student("李明","male",22);
+        console.log(student1);
+	输出的内容是：{}
+若构造函数中return {}, 则new出来的东西为空; 若return 一个原始值，如 123 ，“阿斯蒂芬”等等，则new出来的东西就为new出来的原始对象。
+
+		var num = new Number(123);
+		var str = new String("abcd);
+		var bol = new Boolean("true");
+		num.abc = "abc";
+		str.aaa = "abc";
+	解析：以上三个var 都是从构造函数去定义，可以给定义出来的变量添加属性，因为是构造函数定义出来的，所以可以添加属性。但是undef 和 null 不可以添加属性。
+
+	原始值不能有属性和方法。
+	var str = "abc";
+	console.log(str.length);  // 3
+	若 str.len = 2;
+	console.log(str.len)   // 结果返回undefined，但是并不会报错，原因是隐式的把 str.len = 2 ,变成new String(abc),然后添加属性为len，之后会把len删除；console.log(str.len),然后又从新new String(), 这次的new String()并没有定义len属性，随意输出为undef。
+
+例如：		var arr = [1,2,3,4,5];
+			arr.length = 2;
+			console.log(arr);
+		答案： [1, 2]，数组会截断
+
+			var str = "123";
+			str.length = 2;
+			console.log(str);
+		答案： “123”
+
+		parseInt(3,2)	//以二进制为基低，二进制有3吗？
+		parseInt(2,0)    
+		parseInt(3,8)
+		答案： NaN  2  3
+	解析： 语法：parseInt(string, radix)
+		string	必需。要被解析的字符串。
+		radix	可选。表示要解析的数字的基数。该值介于 2 ~ 36 之间。如果省略该参数或其值为 0，则数字将以 10 为基础来解析。如果它以 “0x” 或 “0X” 开头，将以 16 为基数。如果该参数小于 2 或者大于 36，则 parseInt() 将返回 NaN。
+
+	var arr = []
+	typeof(arr)  // "object"
+	typeof(null) // "object"
+	typeof(undefined) // "undefined"
+
+原型： 原型是function对象得一个属性，它定义了构造函数制造出的对象的公共祖先。通过该构造函数产生的对象，可以继承该原型的属性和方法。原型也是对象{}。
+
+null 和 undefined 不是对象也没有原型，所以undefined.toString() 和 null.toString() 是错的。
+
+JavaScript 可以处理数点前16位，后无穷位位的数。
+
+例如：
+	function Person (name,age,sex){
+            this.name = name;
+            this.age = age;
+            this.sex = sex;
+        }
+
+        function Student (name,age,sex,grade){
+            this.grade = grade;
+            Person.call(this,name,age,sex);
+        }
+
+        var student = new Student("liming",22,"male",2017);
+        console.log(student);
+	解析：call，改变this指向。企业级开发。 apply 只能传一个实参，而且是数组。
+			call 需要把实参按照形参的个数传进去
+			apply 需要传一个arguments
+		例如只需要把Person.call(this,name,age,sex);变为Person.apply(this,[name,age,sex]);
