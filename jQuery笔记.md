@@ -398,6 +398,213 @@ $mdFormatter$38$mdFormatter$
     - $()
 
         确实可以创建元素，但是创建的元素只存在于内存中，如果要在页面上显示，需要追加。需要使用.append($div)来把这个新的元素添加到页面结构里面去。
+
+### jQuery中添加结点的方式
+
+1. append()
+
+    - 父元素.append(子元素); 作为最后一个子元素添加
+    - 如果父元素ul中已经存在的li，id为li3，并且把使用$("ul").append($("#li")),那么此时id为li3的元素会被剪切，然后放在ul的末尾
+
+2. prepend()
+
+    把子元素放到父元素的开头，作为第一个子元素添加
+
+3. .before()
+
+    元素A.before(元素B)，把元素B插入到元素A的前面，作为兄弟元素添加
+
+4. .after()
+
+    元素A.after(元素B)，把元素B插入到元素A的后面，作为兄弟元素添加
+
+5. appendTo()
+
+    子元素.appendTo(父元素)，把子元素作为父元素的最后一个子元素添加
+
+### 清空元素 empty()
+
+- 清空ul
+    $("ul").html(); //不推荐使用，有可能造成内存泄漏，不安全
+    $("ul").empty() //推荐使用
+
+
+
+### 清空元素 remove()
+
+- 移除某一个元素
+    $("li").remove(); //自杀
+
+### 克隆节点 clone(参数)
+
+- 只存在于内存中，如果要在页面上显示，就应该追加到页面上
+- clone()方法参数不管是true还是false，都会克隆到后代节点
+- clone()方法的参数是true，那么会把事件一起克隆上，如果是false，那么就表示不克隆事件，不给参数默认为false
+
+### 获取/设置表单元素的值 val()
+
+- 原生js中通过value来设置或获取表单元素的值
+- .val()方法，不给参数就是获取
+- .val()方法，给参数就是设置
+
+### attr() 对于属性的操作
+
+```js
+    $("img").attr("src","1.jpg") // 以前有src属性，更改这个属性
+    $("img").attr("aaa","哈哈哈哈") // 修改自定义属性
+    $("img").attr("bbb","bbb") // 如果元素原来没有这个属性，那就是添加属性
+    $("img").attr({
+        "title": "这是一张图片",
+        "aaa":"hhhh"
+    })
+```
+
+```js
+    $("img").attr("src") // 自带的属性可以获取
+    $("img").attr("aaa","哈哈哈哈") // 自定义的属性也可以获取
+    $("img").attr("bbb") // 如果元素没有这个属性，那么输出undefined，attr设置的属性也可以获取
+```
+
+### removeAttr() 移除某个属性
+
+- 移除单个属性
+    $("img").removeAttr("src");
+- 移除多个属性
+    $("img").removeAttr("src alt title");
+
+### prop() 设置或获取Boolean属性
+
+有一类属性比如checked，写在元素身上就表示选中，没有写在元素身上就表示没有选中。
+这一类属性在原生js是如何操作的呢？给他设置true或者false，取值也是得到true或者false
+document.getElementById("ckb1").checked = false; // 未选中
+jquery 中 $("ckb1").attr("checked") // 无论选中或者是没有选中都返回undefined
+原因是：在jquery1.6之后，对于checked，selected，disabled这类Boolean类型的属性来说，不能用attr方法，只能用prop方法
+$("ckb1").prop("checked") // 如果多选框是一个选中状态，返回一个true，如果多选框是一个未选中状态则为false
+
+### 宽高 width()/height() innerWidth()/innerHeight()
+
+- 获取宽高
+    $("div").css("width"); // '200px'
+    $("div").css("height"); // '200px'
+- width() / height() 获取或设置元素的宽高，这个宽高不包括padding、border、margin
+    $("div").width()  // 200
+    $("div").height() // 200
+- innerWidth() / innerHeight() // 方法返回元素的宽高，包括padding
+- outerWidth() / outerHeight() // 方法返回元素的宽高，包括padding和border
+- outerWidth(true) / outerHeight(true) // 方法返回元素的宽高，包括padding和border和margin
+- 获取页面可视区域的宽高
+    $(window).width()
+    $(window).height()
+
+### offset() 和 position()
+
+1. offset()
+    - 获取到了一个对象，对象里面包含了top和left值
+    - offset()方法获取元素距离document的距离
+2. position()
+    - 获取到了一个对象，对象里面包含了top和left值
+    - position()方法获取到的元素是：该元素距离有定位的父元素的位置
+
+### scrollTop() 和 scrollLeft()
+
+1. 获取
+    scrollTop():表示元素内容被卷曲出去的高度
+    scrollLeft():表示元素内容被卷曲出去的宽度
+2. 设置： 设置元素内容被卷曲出去的高度和宽度
+3. 获取/设置页面被卷曲出去的高度和宽度
+    $(window).scrollTop();
+    $(window).scrollLeft();
+
+### jQuery事件发展历程
+
+- 用原生js注册相同的事件，后面的会把前面的覆盖
+    ```js
+        document.getElementById("#div1").onclick = function () {
+            alert("hhhh");
+        }
+        
+        document.getElementById("#div1").onclick = function () {
+            alert("哈哈哈");
+        }
+        // 只会弹出‘哈哈哈’而没有‘hhhh’
+    ```
+- 在jQuery中给同一个元素注册相同的事件，后面的不会把前面的给覆盖
+    ```js
+        $("#div1").click(function () {
+            alert("hhhh");
+        })
+        $("#div1").click(function () {
+            alert("哈哈哈");
+        })
+        // 在jQuery中，两个事件都会被执行并且弹出
+    ```
+- 在jQuery1.7之后，jQuery统一了所有事件的注册方法
+    ```js
+        // on 简单注册事件，不支持动态注册
+        $("div").on('click',function(){
+            console.log("我是单击事件");
+        })
+    ```
+- on 委托注册，支持动态注册,原理是事件冒泡
+    ```js
+        $("body").on("click","div",click(){
+            console.log("我是单击事件");
+        })
+    ```
+- jquery中用on来注册事件，那就用off()来解绑事件，off()不给参数就是解绑所有事件，off("click")解绑指定的事件
+- trigger()
+    代码的方式来触发事件
+    可以使用它来触发自定义事件
+
+### 事件对象
+
+1. 什么是事件对象
+    注册一个事件，系统就会帮我们生成一个对象记录这个事件触发时的一些信息
+    比如触发事件的时候有没有按住某一个键，比如触发事件的时候的一些坐标信息
+    jquery中用事件参数e来获取
+    jquery事件对象是对原生js事件对象的一个封装，帮你处理好了兼容性
+    ```js
+        $("div").on("click",function(e){
+            console.log(e);
+            // 事件对象常用的三个坐标
+            console.log("screenX,screenY" + e.screenX,e.screenY); // 触发事件那一点距离，屏幕最左上角的值
+            console.log("clientX,clientY" + e.clientX,e.clientY); // 触发事件那一点距离，可视区左上角的值
+            console.log("pageX,pageY" + e.pageX,e.pageY); // 触发事件那一点距离，页面左上角的值
+        })
+    ```
+### 阻止事件冒泡 e.stopPropagation()
+### 阻止默认行为-a标签的跳转 e.preventDefault();
+### return false; 既可以阻止事件冒泡，又可以阻止默认行为
+### 给页面注册键盘按下事件
+    ```js
+        $(document).on("keydown",function(e){
+            //e.keyCode可以获取按下的是哪个键
+            console.log(e.keyCode);
+        })
+    ```
+    prev(): 上一个兄弟
+    prevAll(): 之前所有兄弟
+    next(): 下一个兄弟
+    nextAll(): 之后所有兄弟
+    .end():改变this指向，回到上一个状态
+### 链式编程
+- 如果给一个元素调用一个方法，这个方法有返回值，并且返回的是一个jquery对象，那么就可以继续点出jquery方法，
+- 必须是jquery对象，才可以继续点出jquery方法
+- 有些时候我们的一个方法返回的确实是一个jquery对象，但是这个对象并不是我们想要的，此时我们就不要点下去了
+- .end() 回到上一个状态
+### each方法
+    遍历我们的jquery对象    
+### 多库共存
+1. 如何查看jquery的版本
+    通过：jQuery.fn.jquery
+        jQuery.prototype.jquery
+        $.fn.jquery
+        $.prototype.jquery
+2. 如果页面中引入了多个jQuery文件，那么哪个文件是最后引入的，$就是谁的
+3. 多库共存，一个页面中有过多个jquery文件，如果想要使用上一个文件的$,那就使用$.noConflict(),把对最后一个jquery文件的控制权释放掉
+
+
+
 ### 随手小记
 
     - jquery 当中的.show()方法其实就是更改display属性的值为block；.hide()方法则把display属性的值更改为none
@@ -426,6 +633,24 @@ $mdFormatter$38$mdFormatter$
 
     * 因为给a标签设置的话不会拿到正确的索引值，a标签是它自己本身的老大，下标永远都是0；但是给li设置鼠标移入事件就不一样，li有其他兄弟元素li，所以.index()的值会改变。
 
+- join() 方法用于把数组中的所有元素放入一个字符串。
+  语法：arrayObject.join(separator)，separator	可选。指定要使用的分隔符。如果省略该参数，则使用逗号作为分隔符。
+
+```js
+    // 例1
+    var arr = new Array(3)
+    arr[0] = "George"
+    arr[1] = "John"
+    arr[2] = "Thomas"
+    document.write(arr.join())  //George,John,Thomas
+    // 例二
+    var arr = new Array(3)
+    arr[0] = "George"
+    arr[1] = "John"
+    arr[2] = "Thomas"
+    document.write(arr.join(".")) // George.John.Thomas
+```
+animate 动画不会改变背景色，如果要改，就要使用到插件jquery.color.js
 
 
 
